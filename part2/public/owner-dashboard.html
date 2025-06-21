@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Owner Dashboard - Dog Walking Service</title>
@@ -7,61 +8,95 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
+
 <body class="bg-light">
   <div id="app" class="container py-4">
-    <h1 class="mb-4 text-primary">Owner Dashboard</h1>
-
-    <!-- Walk request form -->
-    <div class="card mb-4">
-      <div class="card-header bg-primary text-white">
-        Create New Walk Request
+    <!-- Authentication Check -->
+    <div v-if="!isAuthenticated" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <div class="card-body">
-        <form @submit.prevent="submitWalkRequest">
-          <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Requested Date & Time</label>
-            <input v-model="form.requested_time" type="datetime-local" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Duration (minutes)</label>
-            <input v-model="form.duration_minutes" type="number" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Location</label>
-            <input v-model="form.location" type="text" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-success">Create Walk</button>
-        </form>
-      </div>
+      <p class="mt-3">Checking authentication...</p>
     </div>
 
-    <!-- Success or error messages -->
-    <div v-if="message" class="alert alert-info">{{ message }}</div>
-    <div v-if="error" class="alert alert-danger">{{ error }}</div>
+    <!-- Unauthorized Access -->
+    <div v-else-if="!user || user.role !== 'owner'" class="text-center py-5">
+      <h2 class="text-danger mb-3">Access Denied</h2>
+      <p class="text-muted mb-4">You must be logged in as an owner to access this dashboard.</p>
+      <a href="/" class="btn btn-primary">Go to Login</a>
+    </div>
 
-    <!-- List of walk requests -->
-    <h2 class="mb-3">My Walk Requests</h2>
-    <div class="row" v-if="walks.length > 0">
-      <div class="col-md-6 mb-4" v-for="walk in walks" :key="walk.request_id">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Request #{{ walk.request_id }}</h5>
-            <p class="card-text">
-              <strong>Dog:</strong> {{ walk.dog_name }} ({{ walk.size }})<br>
-              <strong>Date:</strong> {{ new Date(walk.requested_time).toLocaleString() }}<br>
-              <strong>Duration:</strong> {{ walk.duration_minutes }} minutes<br>
-              <strong>Location:</strong> {{ walk.location }}<br>
-              <strong>Status:</strong> {{ walk.status }}
-            </p>
+    <!-- Owner Dashboard Content -->
+    <div v-else>
+      <!-- Header with user info and logout -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary mb-0">Owner Dashboard</h1>
+        <div class="d-flex align-items-center">
+          <span class="me-3 text-muted">Welcome, {{ user.username }}</span>
+          <button @click="handleLogout" class="btn btn-outline-secondary btn-sm">Logout</button>
+        </div>
+      </div>
+
+      <!-- Walk request form -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          Create New Walk Request
+        </div>
+        <div class="card-body">
+          <form @submit.prevent="submitWalkRequest">
+            <div class="mb-3">
+              <label class="form-label">Select Dog</label>
+              <select v-model="form.dog_id" class="form-select" required>
+                <option value="">Choose a dog...</option>
+                <option v-for="dog in dogs" :key="dog.dog_id" :value="dog.dog_id">
+                  {{ dog.name }} ({{ dog.size }})
+                </option>
+              </select>
+              <div v-if="dogs.length === 0" class="form-text text-muted">
+                No dogs found. Please add dogs to your profile first.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Requested Date & Time</label>
+              <input v-model="form.requested_time" type="datetime-local" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Duration (minutes)</label>
+              <input v-model="form.duration_minutes" type="number" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Location</label>
+              <input v-model="form.location" type="text" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success" :disabled="dogs.length === 0">Create Walk</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Success or error messages -->
+      <div v-if="message" class="alert alert-info">{{ message }}</div>
+      <div v-if="error" class="alert alert-danger">{{ error }}</div>
+
+      <!-- List of walk requests -->
+      <h2 class="mb-3">My Walk Requests</h2>
+      <div class="row" v-if="walks.length > 0">
+        <div class="col-md-6 mb-4" v-for="walk in walks" :key="walk.request_id">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Request #{{ walk.request_id }}</h5>
+              <p class="card-text">
+                <strong>Dog:</strong> {{ walk.dog_name }} ({{ walk.size }})<br>
+                <strong>Date:</strong> {{ new Date(walk.requested_time).toLocaleString() }}<br>
+                <strong>Duration:</strong> {{ walk.duration_minutes }} minutes<br>
+                <strong>Location:</strong> {{ walk.location }}<br>
+                <strong>Status:</strong> {{ walk.status }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
+      <p v-else>No walk requests yet.</p>
     </div>
-    <p v-else>No walk requests yet.</p>
   </div>
 
   <script>
@@ -77,8 +112,53 @@
         });
 
         const walks = ref([]);
+        const dogs = ref([]);
         const message = ref('');
         const error = ref('');
+        const isAuthenticated = ref(false);
+        const user = ref(null);
+
+        async function checkAuth() {
+          try {
+            const response = await fetch('/auth/status');
+            const data = await response.json();
+
+            if (data.authenticated) {
+              user.value = data.user;
+              isAuthenticated.value = true;
+            } else {
+              // Redirect to login if not authenticated
+              window.location.href = '/';
+            }
+          } catch (error) {
+            console.error('Auth check failed:', error);
+            window.location.href = '/';
+          }
+        }
+
+        async function handleLogout() {
+          try {
+            await fetch('/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+            window.location.href = '/';
+          } catch (error) {
+            console.error('Logout failed:', error);
+          }
+        }
+
+        async function loadDogs() {
+          try {
+            const res = await fetch('/api/users/my-dogs');
+            if (!res.ok) throw new Error('Failed to load dogs');
+            dogs.value = await res.json();
+          } catch (err) {
+            error.value = 'Failed to load dogs: ' + err.message;
+          }
+        }
 
         async function loadWalks() {
           try {
@@ -115,15 +195,23 @@
           }
         }
 
-        onMounted(() => {
-          loadWalks();
+        onMounted(async () => {
+          await checkAuth();
+          if (isAuthenticated.value && user.value.role === 'owner') {
+            await loadDogs();
+            loadWalks();
+          }
         });
 
         return {
           form,
           walks,
+          dogs,
           message,
           error,
+          isAuthenticated,
+          user,
+          handleLogout,
           submitWalkRequest
         };
       }
@@ -132,4 +220,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

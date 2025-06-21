@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PREMIUM DOG WALKING SERVICE - BEST IN TOWN - AFFORDABLE RATES - PROFESSIONAL WALKERS - BOOK NOW!!!</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            color: #ff00ff;
+            cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat908.cur'), auto;
+        }
+
+        #app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 0, 0.7);
+        }
+
+        h1 {
+            animation: rainbow 2s linear infinite, shake 0.5s infinite;
+            font-size: 3em;
+            text-shadow: 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000;
+            text-align: center;
+        }
+
+        .dog-of-day {
+            background-color: #00ffff;
+            border: 5px dashed #ff0000;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .dog-image {
+            max-width: 80%;
+            height: auto;
+            border: 10px solid #ff00ff;
+        }
+
+        .dog-info {
+            font-size: 1.2em;
+            color: #0000ff;
+            background-color: #ffff00;
+            padding: 10px;
+        }
+
+        .services {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .service-item {
+            width: 30%;
+            margin: 10px;
+            padding: 15px;
+            background-color: #ff9999;
+            border: 3px dotted #00ff00;
+            text-align: center;
+        }
+
+        button {
+            background-color: #ff0000;
+            color: yellow;
+            font-size: 24px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+            position: relative;
+            animation: shake 0.5s infinite;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ff00ff;
+            padding: 20px;
+            border: 5px solid #00ff00;
+            z-index: 100;
+            animation: shake 0.5s infinite;
+        }
+
+        .testimonials {
+            column-count: 3;
+            column-gap: 20px;
+            margin: 20px 0;
+        }
+
+        .testimonial {
+            break-inside: avoid;
+            background-color: #ccffcc;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid #0000ff;
+        }
+
+        marquee {
+            background-color: #ff0000;
+            color: white;
+            padding: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .blink {
+            animation: blink 0.5s linear infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        footer {
+            margin-top: 20px;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px;
+            font-size: 0.7em;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <h1>PREMIUM DOG WALKING SERVICE</h1>
+
+        <div class="dog-of-day">
+            <h2 class="blink">⭐⭐⭐ DOG OF THE DAY ⭐⭐⭐</h2>
+            <img v-if="dogImage" :src="dogImage" alt="" class="dog-image">
+            <div class="dog-info">
+                <p><b>Name:</b> Max</p>
+                <p><b>Breed:</b> Irish Wolfhound</p>
+                <p><b>Age:</b> 3 years</p>
+                <p><b>Favorite Activity:</b> Running in the park</p>
+                <p><b>Personality:</b> Friendly, energetic, loves to play with other dogs</p>
+                <p><b>Owner:</b> John Smith</p>
+                <p><b>Walking Schedule:</b> Monday, Wednesday, Friday at 2 PM</p>
+                <p><b>Special Notes:</b> Needs extra attention, doesn't like cats, prefers to walk on grass, allergic to
+                    certain treats, must avoid puddles, tends to pull on leash when excited, loves to chase squirrels,
+                    barks at bicycles</p>
+            </div>
+        </div>
+
+        <div class="services">
+            <div class="service-item">
+                <h3>BASIC WALK</h3>
+                <p>30 minutes</p>
+                <p>$15</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+            <div class="service-item">
+                <h3>PREMIUM WALK</h3>
+                <p>45 minutes</p>
+                <p>$25</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+            <div class="service-item">
+                <h3>DELUXE WALK</h3>
+                <p>60 minutes</p>
+                <p>$35</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+            <div class="service-item">
+                <h3>ADVENTURE WALK</h3>
+                <p>90 minutes</p>
+                <p>$50</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+            <div class="service-item">
+                <h3>GROUP WALK</h3>
+                <p>60 minutes</p>
+                <p>$20</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+            <div class="service-item">
+                <h3>OVERNIGHT CARE</h3>
+                <p>12 hours</p>
+                <p>$100</p>
+                <button @click="showPopup">BOOK NOW!</button>
+            </div>
+        </div>
+
+        <h2 class="blink">HAPPY CUSTOMERS!</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <p>"This service is AMAZING! My dog loves their walks so much! Highly recommend to everyone with a dog!"
+                </p>
+                <p>- Sarah J.</p>
+            </div>
+            <div class="testimonial">
+                <p>"The best dog walkers in town! My puppy is always so happy when they come to pick him up!"</p>
+                <p>- Michael T.</p>
+            </div>
+            <div class="testimonial">
+                <p>"I don't know what I would do without this service. My dog gets the exercise he needs even when I'm
+                    busy with work."</p>
+                <p>- Emma L.</p>
+            </div>
+            <div class="testimonial">
+                <p>"Professional, reliable, and caring. My dog is always excited to see his walker!"</p>
+                <p>- David K.</p>
+            </div>
+            <div class="testimonial">
+                <p>"5 stars! Would recommend to anyone looking for quality dog walking services!"</p>
+                <p>- Jennifer P.</p>
+            </div>
+        </div>
+
+        <div v-if="showPopupFlag" class="popup">
+            <h2>BOOKING CONFIRMED!</h2>
+            <p>Thank you for choosing our service!</p>
+            <p>We'll contact you shortly to arrange the details.</p>
+            <button @click="hidePopup">CLOSE</button>
+        </div>
+
+        <footer>
+            <p>Copyright © 2023 Premium Dog Walking Service. All rights reserved. | Privacy Policy | Terms of Service |
+                Contact Us | About Us | FAQ | Careers | Blog | Testimonials | Gallery | Services | Pricing | Location |
+                Hours | Social Media | Partners | Affiliates | Newsletter | Feedback | Support</p>
+        </footer>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    dogImage: null,
+                    showPopupFlag: false
+                };
+            },
+            methods: {
+                fetchDogImage() {
+                    fetch('https://dog.ceo/api/breeds/image/random')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                this.dogImage = data.message;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching dog image:', error);
+                        });
+                },
+                showPopup() {
+                    this.showPopupFlag = true;
+                    // Auto-hide after 3 seconds
+                    setTimeout(() => {
+                        this.showPopupFlag = false;
+                    }, 3000);
+                },
+                hidePopup() {
+                    this.showPopupFlag = false;
+                }
+            },
+            mounted() {
+                this.fetchDogImage();
+
+                // Show popup automatically after 5 seconds
+                setTimeout(() => {
+                    this.showPopup();
+                }, 5000);
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

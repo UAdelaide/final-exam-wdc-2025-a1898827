@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "setup-demo": "node setup-demo-users.js"
   },
   "dependencies": {
-    "argon2": "^0.27.2",
+    "argon2": "^0.43.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.5.0",
